@@ -1,0 +1,175 @@
+{% extends "index.html" %}
+
+{% block content %}
+    {% block recommendations %}
+    
+        <h2 class="p-8 text-3xl sm:text-4xl font-extrabold tracking-wide text-white mb-4 pb-2">
+          Movie Details
+        </h2>
+        
+        <!-- Movie details section -->
+        <section class="mx-auto w-full px-2 sm:px-4">
+          <div class="grid md:grid-cols-3 gap-4 md:gap-6 items-stretch">
+            <!-- Poster (left) -->
+            <div class="rounded-xl overflow-hidden bg-black/40 backdrop-blur-md border border-gray-800 shadow-xl
+                        flex">
+              <img
+                src={{rec_movies['poster_path'].iloc[0]}}
+                alt="Selected movie poster"
+                class="w-full h-[735px] md:h-[735px] object-cover object-center"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          
+            <!-- Details table (right) -->
+            <div class="md:col-span-2 rounded-xl bg-black/40 backdrop-blur-md border border-gray-800 shadow-xl
+                        p-4 sm:p-5 md:p-6 flex flex-col h-[735px] md:h-[735px]">
+              <!-- Title -->
+              <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">
+                Details
+              </h3>
+            
+              <!-- Scroll container to match the poster height -->
+              <div class="overflow-auto rounded-lg border border-gray-800/70">
+                <table class="movie-table min-w-full text-sm text-gray-200">
+                  <tbody class="[&>tr:nth-child(odd)]:bg-white/5">
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Title (Original Title)</td>
+                      <td class="px-4 py-2.5">
+                        {{rec_movies['title'].iloc[0]}} ({{(rec_movies['original_title'].iloc[0])}})
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Homepage</td>
+                      <td class="px-4 py-2.5">
+                        <a href=" {{rec_movies['homepage'].iloc[0]}} " class="pretty-link">
+                           {{rec_movies['homepage'].iloc[0]}} 
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Release Date</td>
+                      <td class="px-4 py-2.5"> {{rec_movies['release_date'].iloc[0]}} </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Overview</td>
+                      <td class="px-4 py-2.5 leading-relaxed text-gray-100">
+                         {{rec_movies['overview'].iloc[0]}} 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Genres</td>
+                      <td class="px-4 py-2.5">
+                         {{", ".join((rec_movies['genres'].iloc[0]).split(sep="|"))}} 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Runtime</td>
+                      <td class="px-4 py-2.5"> {{rec_movies['runtime'].iloc[0]}}  min</td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Tagline</td>
+                      <td class="px-4 py-2.5 italic text-gray-200">
+                         {{ rec_movies['tagline'].iloc[0] | default('N/A', true) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Production Companies</td>
+                      <td class="px-4 py-2.5">
+                         {{", ".join((rec_movies['production_companies'].iloc[0]).split(sep="|")) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Director Name</td>
+                      <td class="px-4 py-2.5"> {{rec_movies['director_name'].iloc[0]}} </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Popularity</td>
+                      <td class="px-4 py-2.5">
+                         {{ '{:,.2f}'.format(rec_movies['popularity'].iloc[0]|float) }} 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Original Language</td>
+                      <td class="px-4 py-2.5"> {{rec_movies['original_language'].iloc[0]| upper}} </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Origin Country</td>
+                      <td class="px-4 py-2.5">
+                         {{", ".join((rec_movies['origin_country'].iloc[0]).split(sep="|"))}} 
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-left font-semibold tracking-wide px-4 py-3 border-b border-gray-800/70">Revenue</td>
+                      <td class="px-4 py-2.5">
+                        $ {{ '{:,}'.format(rec_movies['revenue'].iloc[0]|float|int) }} 
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {# Ruler to separate the two sections #}
+        <div class="relative my-8">
+          <div class="h-[2px] bg-red-600 rounded-full"></div>
+          <div class="absolute inset-x-0 -top-1 h-3 bg-red-600/30 blur-md"></div>
+        </div>
+
+        <h2 class="pl-8 text-3xl sm:text-4xl font-extrabold tracking-wide text-white mb-4 pb-2">
+          Recommended Movies
+        </h2>
+
+        
+        <!-- Recommended Movies -->
+        <section class="mx-auto w-full px-2 sm:px-4">
+          <!-- Grid wrapper (max 5 cards per row on desktop) -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+            {# Loop through recommended movies #}
+            {% for i, row in rec_movies.iterrows() %}
+              {% if i > 0 %} {# skip index 0 as it represents the selected movie #}
+              <!-- Card -->
+              <article class="group rounded-xl overflow-hidden bg-black/40 backdrop-blur-md
+                              border border-gray-800 shadow-xl hover:border-gray-700 transition-colors">
+                <!-- Poster -->
+                {% if row['poster_path'] %}
+                  <a href="{{ row['homepage'] }}" class="block">
+                    <img
+                      src="{{ row['poster_path'] }}"
+                      alt="{{ row['title'] }}"
+                      class="w-full aspect-[2/3] object-cover object-center opacity-95 group-hover:opacity-100 transition-opacity"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                {% else %}
+                  <div class="w-full aspect-[2/3] bg-gray-900/60 grid place-items-center text-gray-400">
+                    No poster
+                  </div>
+                {% endif %}
+                
+                <!-- Meta -->
+                <div class="p-3 sm:p-4">
+                  <a href="{{ row['homepage'] }}" class="block">
+                    <h3 class="text-sm sm:text-base font-semibold text-white line-clamp-2 group-hover:text-red-400 transition-colors">
+                      {{ row['title'] }}
+                    </h3>
+                  </a>
+                
+                  <!-- extra info -->
+                  <div class="mt-1 text-xs text-gray-400">
+                    {% if 'tagline' in row and row['tagline'] %}
+                      <p class="line-clamp-2 italic">{{ row['tagline'] }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+    {% endblock  %}
+{% endblock  %}

@@ -1,0 +1,41 @@
+body {
+    background-image: url("assets/background.jpg");
+    background-size: cover;
+    background-position: center;
+    color: aliceblue;
+}
+
+.pretty-link {
+    color: #039eff;                
+    text-decoration: none;
+    position: relative;
+    transition: color 180ms ease;
+}
+
+.pretty-link::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 0%; height: 2px;
+    background: currentColor;
+    transition: width 200ms ease;
+}
+
+.pretty-link:hover {
+  color: #FF0000;               
+}
+
+.pretty-link:hover::after {
+    width: 100%;
+}
+
+.movie-table tbody tr:nth-child(odd) { background: rgba(105, 97, 255, 0.11); }
+.movie-table tbody tr:hover { background: rgba(37, 99, 235, 0.2); }
+
+
+
+select:focus-visible { outline: none; }
+  select option {
+    color: #e5e7eb;
+    background-color: #111827; 
+  }

@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+    
+{% endblock %}
+{% block content %}
+  
+<!-- Form card -->
+<section class="mx-auto w-full max-w-3xl px-2 sm:px-4 pt-9">
+  <div class="rounded-xl bg-black/40 backdrop-blur-md border border-gray-800 shadow-xl">
+    <!-- Accent top line -->
+    <div class="h-0.5 bg-gradient-to-r from-red-600/0 via-red-600/70 to-red-600/0"></div>
+
+    <form id="rec-form" class="p-5 sm:p-6" action="{{url_for('index')}}" method="POST">
+      <h2 class="text-2xl font-bold text-white tracking-wide mb-4 flex items-center gap-2">
+        <svg class="h-6 w-6 text-red-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M4 6a2 2 0 0 1 2-2h9l5 5v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6zM15 4v4h4" />
+        </svg>
+        Recommend Movies
+      </h2>
+      
+      <!-- Movie select -->
+      <div class="mb-5 z-0">
+        <label for="movie" class="block text-sm font-medium text-gray-200 mb-1">Select a movie</label>
+        <div class="relative">
+          <select id="movie" name="movie"
+            class="w-full appearance-none rounded-lg bg-black/50 text-gray-100
+                   border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500
+                   px-4 py-2.5 pr-10 shadow-inner transition-colors">
+            <!-- Options are populated by Jinja -->
+             {% for title in movie_titles %}
+                <option value="{{ title }}" {% if movie_name == title %}selected{% endif %}>
+                  {{ title }}
+                </option>
+            {% endfor %}
+          </select>
+          <!-- Dropdown icon -->
+          <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"
+               viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.25 8.27a.75.75 0 0 1-.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <p class="pl-2 mt-2 text-xs text-gray-400"><b>Tip:</b> You can select a movie from the dropdown list above or type the name for quicker search.</p>
+      </div>
+
+
+      <!-- Movie name input with suggestions -->
+      <div class="mb-6 z-10">
+        <label for="movie-input" class="block text-sm font-medium text-gray-200 mb-1">
+          Type movie name
+        </label>
+      
+        <div class="relative group">
+          <input
+            id="movie-input"
+            name="movieInput"
+            type="text"
+            placeholder="Type a movie title…"
+            autocomplete="off"
+            class="peer w-full rounded-lg bg-black/50 text-gray-100
+                   border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500
+                   placeholder:text-gray-400 px-4 py-2.5 shadow-inner transition-colors"
+            aria-autocomplete="list"
+            aria-controls="movie-suggestions"
+            aria-expanded="false"
+            aria-haspopup="listbox"
+          />
+        
+          <!-- helper text -->
+          <p class="pl-2 mt-2 text-xs text-gray-400">
+            Start typing and pick from suggestions. Press <kbd class="px-1 py-0.5 bg-gray-800 text-gray-200 rounded">Enter</kbd> to confirm.
+          </p>
+        
+          <!-- Suggestions dropdown -->
+          <ul
+            id="movie-suggestions"
+            role="listbox"
+            class="absolute left-0 right-0 mt-2 max-h-56 overflow-auto
+                   rounded-lg border border-gray-800 bg-black/70 backdrop-blur
+                   shadow-xl hidden"
+          >
+            <!-- Items injected by JS -->
+            
+          </ul>
+        </div>
+      </div>
+
+
+      <!-- Top-N slider + number field -->
+      <div class="mb-6">
+        <label for="topn" class="block text-sm font-medium text-gray-200 mb-1">How many movies to recommend</label>
+
+        <div class="flex items-center gap-4">
+          <!-- Range slider -->
+          <input id="topn" name="topn" type="range" min="1" max="99" value="10"
+            class="w-full accent-red-600 cursor-pointer
+                   [--tw-shadow:inset_0_1px_0_0_rgba(255,255,255,.06)]
+                   h-2 rounded-lg bg-gray-700/60 outline-none" />
+
+          <!-- Numeric field (keeps in sync with slider) -->
+          <input id="topn-number" type="number" min="1" max="99" value="10" disabled
+            class="w-16 rounded-lg bg-black/50 text-gray-100
+                   border border-gray-700 focus:border-red-500 focus:ring-1 focus:ring-red-500
+                   px-2 py-2 text-center" />
+        </div>
+        <p class="p-2 text-xs text-gray-400">
+          You can see up to 99 recommendation
+        </p>
+      </div>
+
+      <!-- Submit -->
+      <div class="flex items-center gap-3 ">
+        <button type="submit"
+          class="cursor-pointer inline-flex items-center gap-2 rounded-lg bg-red-600 hover:bg-red-500
+                 px-4 py-2.5 text-white font-semibold tracking-wide shadow-lg shadow-red-900/40
+                 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-red-500">
+          Select Movie
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Area to show results (this part is extended in rec.html) -->
+  <div id="result" class="mt-6 text-gray-200">
+      {% block recommendations %}{% endblock  %}
+
+  </div>
+  
+</section>
+
+{# import the JS script #}
+<script src="{{url_for('static', filename='script.js')}}"></script>
+{% endblock %}
+
